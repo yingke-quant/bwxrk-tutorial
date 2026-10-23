@@ -174,6 +174,46 @@
     font-size: 15px;
   }
 
+  .faq-item {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background: var(--panel);
+    overflow: hidden;
+  }
+  .faq-item summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 14px 18px;
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::before {
+    content: "Q";
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent-dim);
+    color: var(--accent);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .faq-item[open] summary { border-bottom: 1px solid var(--border); }
+  .faq-item .faq-a {
+    padding: 14px 18px 16px 52px;
+    color: var(--text-dim);
+    font-size: 14px;
+    white-space: pre-line;
+  }
+
   /* 图片放大查看 */
   .lightbox {
     display: none;
@@ -209,6 +249,7 @@
     <a href="#step4"><span class="num">4</span>开工检查</a>
     <a href="#step5"><span class="num">5</span>窗口适配成功</a>
     <a href="#step6"><span class="num">6</span>开始挂机</a>
+    <a href="#faq"><span class="num">?</span>常见问题</a>
   </nav>
 
   <main>
@@ -285,6 +326,79 @@
     <section class="step" id="step6">
       <div class="step-head"><span class="badge">6</span><h3>开始挂机</h3></div>
       <div class="final">以上步骤确认都没问题后，就可以放心去挂机了。</div>
+    </section>
+
+    <section class="step" id="faq">
+      <div class="step-head"><span class="badge">?</span><h3>常见问题 QA</h3></div>
+      <div class="step-body">
+
+        <details class="faq-item">
+          <summary>支持哪些平台？手机、Windows、Mac、鸿蒙系统</summary>
+          <div class="faq-a">目前仅支持 Windows 10 以上操作系统，其他系统正在全力赶工，会陆续开放出来。</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>会封号吗？</summary>
+          <div class="faq-a">不会。小助手不是外挂，它的原理是通过游戏截图，识别后进行模版匹配，然后模拟点击和拖拽操作。60多亿战力大佬一样在用。</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>支持识别哪些游戏平台？</summary>
+          <div class="faq-a">微信小程序、支付宝（网页）、各种模拟器（腾讯手游助手最佳）都支持，其余模拟器可能要调整参数来适配。</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>找不到游戏窗口</summary>
+          <div class="faq-a">小助手是通过窗口标题来找游戏的，点开工检查后，日志区域会提示找到的游戏窗口名有哪些，核对一下真正的名字，然后填写到：设置 -> 游戏窗口标题 处。</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>mumu 模拟器如何支持（其他模拟器类似）</summary>
+          <div class="faq-a">1、设置窗口标题，见 QA【找不到游戏窗口】。
+2、在 设置 中修改 运行模式 为：有鼠标模式。</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>支付宝网页不能正确标定窗口</summary>
+          <div class="faq-a">检查支付宝游戏中新界面，有没有点击全屏。</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>窗口适配正常，但是挂机不会操作游戏</summary>
+          <div class="faq-a">游戏窗口权限太高，助手权限不够。需要重新在"启动程序"文件右键选择"以管理员身份运行"。</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>支持多账号挂机吗？</summary>
+          <div class="faq-a">不支持，启动多个助手程序会相互覆盖数据，导致每个账号都会出现各种识别不准的问题，甚至直接跑不起来。</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>小助手运行中，可以做其他操作吗？</summary>
+          <div class="faq-a">可以，助手通过 PrintWindow 技术实现精准窗口点击，不会占用鼠标和键盘。可以将任何窗口覆盖在游戏窗口上。唯一注意一点：不能将游戏窗口最小化（操作系统限制，无法读取游戏画面）。</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>不上牌、两种植物互挤、找不到按钮</summary>
+          <div class="faq-a">游戏窗口尺寸太小。将游戏窗口左右两边拉到最大（窗口会等比放大），部分区域超出屏幕也没关系。助手是通过游戏截图识别按钮，按钮或画面尺寸过小无法通过模版识别出来。</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>植物皮肤能识别吗？</summary>
+          <div class="faq-a">助手兼容了图鉴中的所有皮肤，一些限定皮肤（不在图鉴中）会无法识别，只需要下掉皮肤就能正确识别了。</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>出问题时，如何向管理员提供证据？</summary>
+          <div class="faq-a">一共分 5 步，这样采集最精确：
+1、关闭小助手，将主目录 runtime 文件夹全部删除
+2、重启小助手，打开 设置 -> 调试模式，然后保存
+3、进入 准备工作 -> 开工检查，确认一切就绪
+4、勾选有问题的玩法，点击一键挂机
+5、将 runtime 目录整体压缩打包，发给管理员</div>
+        </details>
+
+      </div>
     </section>
   </main>
 </div>

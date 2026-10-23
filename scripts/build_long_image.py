@@ -128,6 +128,44 @@ class Canvas:
 
         self.blocks.append((h + 16, draw_fn))
 
+    def add_qa(self, question, answer):
+        tmp = Image.new("RGB", (10, 10))
+        d = ImageDraw.Draw(tmp)
+        q_x = PAD + 44
+        q_inner_w = self.width - q_x - PAD
+        q_lines = wrap_text(question, body_font, q_inner_w, d)
+        a_x = PAD + 20
+        a_inner_w = self.width - a_x - PAD - 20
+        a_lines = []
+        for raw in answer.split("\n"):
+            a_lines.extend(wrap_text(raw, caption_font, a_inner_w, d))
+
+        q_block_h = max(len(q_lines) * 30, 30) + 20
+        a_block_h = len(a_lines) * 28 + 20
+        h = q_block_h + a_block_h + 16
+
+        def draw_fn(draw, y, w):
+            box_h = q_block_h + a_block_h
+            draw.rounded_rectangle([PAD, y, w - PAD, y + box_h], radius=8, fill=PANEL, outline=BORDER, width=1)
+            # Q badge
+            bd = 24
+            bx, by = PAD + 14, y + 14
+            draw.ellipse([bx, by, bx + bd, by + bd], fill=(42, 58, 92))
+            tb = draw.textbbox((0, 0), "Q", font=caption_font)
+            tw, th = tb[2] - tb[0], tb[3] - tb[1]
+            draw.text((bx + bd / 2 - tw / 2, by + bd / 2 - th / 2 - tb[1]), "Q", font=caption_font, fill=ACCENT)
+            ty = y + 16
+            for ln in q_lines:
+                draw.text((q_x, ty), ln, font=body_font, fill=TEXT)
+                ty += 30
+            draw.line([PAD, y + q_block_h, w - PAD, y + q_block_h], fill=BORDER, width=1)
+            ty = y + q_block_h + 14
+            for ln in a_lines:
+                draw.text((a_x, ty), ln, font=caption_font, fill=TEXT_DIM)
+                ty += 28
+
+        self.blocks.append((h, draw_fn))
+
     def add_images_row(self, items, indent=True):
         """items: list of (path, caption)"""
         x0 = PAD + 60 if indent else PAD
@@ -247,6 +285,48 @@ def main():
 
     c.add_step_header(6, "开始挂机")
     c.add_final("以上步骤确认都没问题后，就可以放心去挂机了。")
+    c.add_divider()
+
+    c.add_step_header("?", "常见问题 QA")
+    qas = [
+        ("支持哪些平台？手机、Windows、Mac、鸿蒙系统",
+         "目前仅支持 Windows 10 以上操作系统，其他系统正在全力赶工，会陆续开放出来。"),
+        ("会封号吗？",
+         "不会。小助手不是外挂，它的原理是通过游戏截图，识别后进行模版匹配，然后模拟点击和拖拽操作。"
+         "60多亿战力大佬一样在用。"),
+        ("支持识别哪些游戏平台？",
+         "微信小程序、支付宝（网页）、各种模拟器（腾讯手游助手最佳）都支持，其余模拟器可能要调整参数来适配。"),
+        ("找不到游戏窗口",
+         "小助手是通过窗口标题来找游戏的，点开工检查后，日志区域会提示找到的游戏窗口名有哪些，"
+         "核对一下真正的名字，然后填写到：设置 -> 游戏窗口标题 处。"),
+        ("mumu 模拟器如何支持（其他模拟器类似）",
+         "1、设置窗口标题，见 QA【找不到游戏窗口】。\n2、在 设置 中修改 运行模式 为：有鼠标模式。"),
+        ("支付宝网页不能正确标定窗口",
+         "检查支付宝游戏中新界面，有没有点击全屏。"),
+        ("窗口适配正常，但是挂机不会操作游戏",
+         "游戏窗口权限太高，助手权限不够。需要重新在“启动程序”文件右键选择“以管理员身份运行”。"),
+        ("支持多账号挂机吗？",
+         "不支持，启动多个助手程序会相互覆盖数据，导致每个账号都会出现各种识别不准的问题，甚至直接跑不起来。"),
+        ("小助手运行中，可以做其他操作吗？",
+         "可以，助手通过 PrintWindow 技术实现精准窗口点击，不会占用鼠标和键盘。可以将任何窗口覆盖在游戏窗口上。"
+         "唯一注意一点：不能将游戏窗口最小化（操作系统限制，无法读取游戏画面）。"),
+        ("不上牌、两种植物互挤、找不到按钮",
+         "游戏窗口尺寸太小。将游戏窗口左右两边拉到最大（窗口会等比放大），部分区域超出屏幕也没关系。"
+         "助手是通过游戏截图识别按钮，按钮或画面尺寸过小无法通过模版识别出来。"),
+        ("植物皮肤能识别吗？",
+         "助手兼容了图鉴中的所有皮肤，一些限定皮肤（不在图鉴中）会无法识别，只需要下掉皮肤就能正确识别了。"),
+        ("出问题时，如何向管理员提供证据？",
+         "一共分 5 步，这样采集最精确：\n"
+         "1、关闭小助手，将主目录 runtime 文件夹全部删除\n"
+         "2、重启小助手，打开 设置 -> 调试模式，然后保存\n"
+         "3、进入 准备工作 -> 开工检查，确认一切就绪\n"
+         "4、勾选有问题的玩法，点击一键挂机\n"
+         "5、将 runtime 目录整体压缩打包，发给管理员"),
+    ]
+    for i, (q, a) in enumerate(qas):
+        c.add_qa(q, a)
+        if i != len(qas) - 1:
+            c.add_space(16)
 
     img = c.render()
     os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)

@@ -264,7 +264,12 @@ def main():
     c.add_images_row([(os.path.join(IMG_DIR, "第一步.png"), "第一步操作示例")])
     c.add_divider()
 
-    c.add_step_header(3, "浏览器点全屏")
+    c.add_step_header(3, "使用推荐平台/模拟器")
+    c.add_body_text("微信小程序用户推荐使用：腾讯手游助手")
+    c.add_body_text("支付宝用户推荐使用：谷歌浏览器")
+    c.add_body_text("APP 用户推荐使用：腾讯手游助手")
+    c.add_body_text("其他端：暂未实测。")
+    c.add_tip("使用推荐平台出问题的几率更小，兼容更好。")
     c.add_body_text("打开浏览器（支付宝端），先点击全屏，再进行下一步操作。")
     c.add_images_row([(os.path.join(IMG_DIR, "浏览器点全屏.png"), "浏览器点全屏示例")])
     c.add_divider()
